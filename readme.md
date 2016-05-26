@@ -1,9 +1,8 @@
 ## RESTful API
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
 
-API with RESTful architecture built with Laravel 5 with api-key authentication. Allow users create, read, update and delete process. 
+API with RESTful architecture built using Laravel 5 and implementing api-key authentication. Used for creation, reading, updating and deleting users (CRUD).
 
 ## Version details
 
