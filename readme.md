@@ -2,9 +2,15 @@
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
 
-API with RESTful architecture built using Laravel 5 and implementing api-key authentication. Used for creation, reading, updating and deleting users (CRUD).
+RESTful API built using Laravel 5. Used for tasks management and users CRUD.
+
+The API Implements:
+- Api-key authentication.
+- Entry data validation.
+- Json responses with success, errors and details.
+- Models relations with eager loading.
 
 ## Version details
 
-- Backend built with Laravel 5.1
+- Backend built with Laravel 5.2
 - Frontend built with Laravel 5.2
