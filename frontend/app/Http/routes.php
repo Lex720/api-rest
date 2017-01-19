@@ -11,10 +11,12 @@
 |
 */
 
-/*Route::get('/', function () {
+Route::get('/', function () {
     return view('welcome');
-});*/
+});
 
-Route::get('/', 'UserController@index');
+Route::resource('users', 'UserController');
 
-Route::resource('user', 'UserController');
+Route::resource('priorities', 'PriorityController');
+
+Route::resource('tasks', 'TaskController');

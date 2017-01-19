@@ -7,7 +7,6 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
 
     <title>API REST Frontend</title>
 
@@ -30,11 +29,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="{{url('/user')}}">API REST Frontend</a>
+          <a class="navbar-brand" href="{{url('/')}}">API REST Frontend</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="{{url('/user/create')}}">Create new user</a></li>
+            <li class="active"><a href="{{url('/users')}}">Users</a></li>
+            <li class="active"><a href="{{url('/priorities')}}">Priorities</a></li>
+            <li class="active"><a href="{{url('/tasks')}}">Tasks</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

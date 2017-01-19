@@ -15,4 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('user', 'UserController', ['only' => ['index', 'store', 'update', 'destroy', 'show']]);
+Route::get('users/ids', 'UserController@ids');
+Route::resource('users', 'UserController', ['only' => ['index', 'store', 'update', 'destroy', 'show', 'ids']]);
+
+Route::get('priorities/ids', 'PriorityController@ids');
+Route::resource('priorities', 'PriorityController', ['only' => ['index', 'store', 'update', 'destroy', 'show', 'ids']]);
+
+Route::resource('tasks', 'TaskController', ['only' => ['index', 'store', 'update', 'destroy', 'show']]);
+
+

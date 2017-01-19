@@ -12,9 +12,13 @@ class UserTest extends TestCase
     public function getData($custom = array())
     {
         $data = [
-            'name'      => 'joe',
+            'firstname' => 'joe',
+            'lastname'  => 'doe',
             'email'     => 'joe@doe.com',
-            'password'  => '12345'
+            'role'      => 'user',
+            'user'      => 'joe',
+            'password'  => '123456',
+            'password_confirmation'  => '123456'
             ];
 
         $data = array_merge($data, $custom);
@@ -24,34 +28,34 @@ class UserTest extends TestCase
 
     public function testUserValidationCRUD()
     {
-        $data = $this->getData(['name' => '', 'email' => 'alex']);
-        $this->post('/user', $data)
-            ->seeJsonEquals(['created' => false, 'errors' => ["The email must be a valid email address.","The name field is required."]]);
+        $this->get('users/1')->seeJsonEquals(['error' => 'Not found']);
 
-        $data = $this->getData(['name' => '', 'email' => 'jose']);
-        $this->put('/user/1', $data)
-            ->seeJsonEquals(['updated' => false, 'errors' => ["The email must be a valid email address.","The name field is required."]]);
+        $data = $this->getData(['firstname' => '', 'lastname' => '', 'email' => 'alex', 'password_confirmation' => '654321']);
+        $this->post('/users', $data)
+            ->seeJsonEquals(['created' => false, 'errors' => ["The email must be a valid email address.","The firstname field is required.","The lastname field is required.","The password confirmation does not match."]]);
 
-        $this->get('user/1')->seeJsonEquals(['error' => 'Model not found']);
+        $data = $this->getData(['firstname' => '', 'lastname' => '', 'email' => 'jose']);
+        $this->put('/users/1', $data)
+            ->seeJsonEquals(['updated' => false, 'errors' => ["The email must be a valid email address.","The firstname field is required.","The lastname field is required."]]);
 
-        $this->delete('user/1')->seeJsonEquals(['error' => 'Model not found']);
+        $this->delete('users/1')->seeJsonEquals(['error' => 'Not found']);
     }
  
     public function testUserCRUD()
     {
         $data = $this->getData();
-        $this->post('/user', $data)->seeJsonEquals(['created' => true]);
+        $this->post('/users', $data)->seeJsonEquals(['created' => true]);
 
-        $this->get('user/1')->seeJson(['name' => 'joe']);
+        $this->get('users/1')->seeJson(['firstname' => 'joe']);
  
-        $data = $this->getData(['name' => 'jane']);
-        $this->put('/user/1', $data)->seeJsonEquals(['updated' => true]);
+        $data = $this->getData(['firstname' => 'jane']);
+        $this->put('/users/1', $data)->seeJsonEquals(['updated' => true]);
 
-        $this->get('user/1')->seeJson(['name' => 'jane']);
+        $this->get('users/1')->seeJson(['firstname' => 'jane']);
 
-        $this->delete('user/1')->seeJsonEquals(['deleted' => true]);
+        $this->delete('users/1')->seeJsonEquals(['deleted' => true]);
 
-        $this->get('user/1')->seeJsonEquals(['error' => 'Model not found']);
+        $this->get('users/1')->seeJsonEquals(['error' => 'Not found']);
     }
  
 }

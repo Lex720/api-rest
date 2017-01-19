@@ -13,23 +13,31 @@
       <td> {{ $user->id }} </td>
     </tr>
     <tr>
-      <th>Name:</th>
-      <td> {{ $user->name }} </td>
+      <th>First Name:</th>
+      <td> {{ $user->firstname }} </td>
+    </tr>
+     <tr>
+      <th>Last Name:</th>
+      <td> {{ $user->lastname }} </td>
     </tr>
     <tr>
       <th>Email:</th>
       <td> {{ $user->email }} </td>
     </tr>
+     <tr>
+      <th>Role:</th>
+      <td> {{ ucwords($user->role) }} </td>
+    </tr>
     <tr>
       <th>Action:</th>
       <td>
-        <a href="{{url('user/'.$user->id.'/edit')}}">Edit</a>
+        <a href="{{url('users/'.$user->id.'/edit')}}">Edit</a>
       </td>
     </tr>
     <tr>
       <th>Delete:</th>
       <td>
-        <form method="POST" action="{{url('/user/'.$user->id)}}">
+        <form method="POST" action="{{url('/users/'.$user->id)}}">
           <input name="_method" type="hidden" value="DELETE">
           <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
           <button type="submit" class="btn btn-default btn-xs">
@@ -40,15 +48,13 @@
     </tr>
   @else
     <tr>
-      <td colspan="3">There is no records</td>
+      <td colspan="5">There is no records</td>
     </tr>
   @endif
   </table>
 
-  <p align="center"><a href="{{url('user')}}">Back</a></p>
+  <p align="right"><a href="{{url('users')}}">Back</a></p>
 
 </div> <!-- /container -->
-
-  
 
 @endsection

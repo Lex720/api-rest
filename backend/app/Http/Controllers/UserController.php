@@ -3,18 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\User;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\User;
 
 class UserController extends Controller
 {
-    // Reglas de validación
-    protected $rules = [
-                'name'      => 'required',
+    protected $rules_create = [
+                'firstname' => 'required',
+                'lastname'  => 'required',
+                'email'     => 'required|email|unique:users,email',
+                'role'      => 'required|in:admin,user',
+                'user'      => 'required|unique:users,user',
+                'password'  => 'required|confirmed|min:6',
+            ];
+
+    protected $rules_update = [
+                'firstname' => 'required',
+                'lastname'  => 'required',
                 'email'     => 'required|email',
-                'password'  => 'required'
+                'role'      => 'required|in:admin,user',
             ];
 
     /**
@@ -24,9 +31,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $users = User::with('tasks')->orderBy('id', 'asc')->get();
 
-        //return view('create');
+        if ($users->isEmpty()) return null;
+
+        return $users;
     }
 
     /**
@@ -49,13 +58,12 @@ class UserController extends Controller
     {
         if (!is_array($request->all())) 
         {
-            return ['error' => 'request must be an array'];
+            return ['error' => 'Request must be an array'];
         }
  
         try 
         {
-            // Ejecucion del validador
-            $validator = \Validator::make($request->all(), $this->rules);
+            $validator = \Validator::make($request->all(), $this->rules_create);
 
             if ($validator->fails()) 
             {
@@ -66,9 +74,20 @@ class UserController extends Controller
             }
             else
             {
-                User::create($request->all());
+                $user = new User;
+                $user->firstname = $request->firstname;
+                $user->lastname = $request->lastname;
+                $user->email = $request->email;
+                $user->role = $request->role;
+                $user->user = $request->user;
+                $user->password = bcrypt($request->password);
+                
+                if ($user->save())
+                {
+                    return ['created' => true];
+                }
 
-                return ['created' => true];
+                return ['created' => false];
             }
 
         } 
@@ -113,13 +132,12 @@ class UserController extends Controller
     {
         if (!is_array($request->all())) 
         {
-            return ['error' => 'request must be an array'];
+            return ['error' => 'Request must be an array'];
         }
  
         try 
         {
-            // Ejecucion del validador
-            $validator = \Validator::make($request->all(), $this->rules);
+            $validator = \Validator::make($request->all(), $this->rules_update);
 
             if ($validator->fails()) 
             {
@@ -130,11 +148,21 @@ class UserController extends Controller
             }
             else
             {
-                $user = User::find($id);
+                $email_exist = User::where('id', '!=', $id)->where('email', '=', $request->email)->first();
+                if ($email_exist != null) return ['error' => 'Email already been taken'];
 
-                $user->update($request->all());
+                $user = User::find($id);
+                $user->firstname = $request->firstname;
+                $user->lastname = $request->lastname;
+                $user->role = $request->role;
+                $user->email = $request->email;
                 
-                return ['updated' => true];
+                if ($user->save())
+                {
+                    return ['updated' => true];
+                }
+
+                return ['updated' => false];
             }
 
         } 
@@ -159,5 +187,17 @@ class UserController extends Controller
         $user = User::destroy($id);
 
         return ['deleted' => true];
+    }
+
+    /**
+     * Display a listing of the users ids.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function ids()
+    {
+        $users = User::select('id', 'firstname')->get();
+
+        return $users;
     }
 }

@@ -3,20 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
-
 use Redirect;
-
 use GuzzleHttp\Client;
 
 class UserController extends Controller
 {
-
     protected $data = [
                 'base_uri' => 'http://apiback.app/', 
                 'headers'  => [
-                    'api-key' => '$2y$10$8IIyWww8.9D823nKzn4TmOmPB'
+                    'api-key' => 'base64:5IqWYSPEpS26vkD5inLd5xCW275uuucjBr5KdAF1ALY='
                 ]
             ];
 
@@ -29,13 +25,13 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->get('user');
+        $response = $client->get('users');
 
         $body = $response->getBody();
 
         $users = json_decode($body);
 
-        return view('user.list')->with(compact('users'));
+        return view('users.list')->with(compact('users'));
     }
 
     /**
@@ -45,7 +41,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('user.create');
+        return view('users.create');
     }
 
     /**
@@ -58,11 +54,15 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->post('user', [
+        $response = $client->post('users', [
             'form_params' => [
-                'name' => $request->name,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
                 'email' => $request->email,
-                'password' => $request->password
+                'role' => $request->role,
+                'user' => $request->user,
+                'password' => $request->password,
+                'password_confirmation' => $request->password_confirmation
             ]
         ]);
 
@@ -70,9 +70,9 @@ class UserController extends Controller
 
         $res = json_decode($body);
 
-        if (isset($res->created) == true)
+        if (isset($res->created) && $res->created === true)
         {
-            return Redirect::to('user')->with('success', 'User created successfully!');
+            return Redirect::to('users')->with('success', 'User created successfully!');
         }
         else 
         {
@@ -90,13 +90,13 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->get('user/'.$id);
+        $response = $client->get('users/'.$id);
 
         $body = $response->getBody();
 
         $user = json_decode($body);
 
-        return view('user.show')->with(compact('user'));
+        return view('users.show')->with(compact('user'));
     }
 
     /**
@@ -109,13 +109,13 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->get('user/'.$id);
+        $response = $client->get('users/'.$id);
 
         $body = $response->getBody();
 
         $user = json_decode($body);
 
-        return view('user.edit')->with(compact('id', 'user'));
+        return view('users.edit')->with(compact('id', 'user'));
     }
 
     /**
@@ -129,11 +129,12 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->put('user/'.$id, [
+        $response = $client->put('users/'.$id, [
             'form_params' => [
-                'name' => $request->name,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
                 'email' => $request->email,
-                'password' => $request->password
+                'role' => $request->role,
             ]
         ]);
 
@@ -141,9 +142,9 @@ class UserController extends Controller
 
         $res = json_decode($body);
 
-        if (isset($res->updated) == true)
+        if (isset($res->updated) && $res->updated === true)
         {
-            return Redirect::to('user')->with('success', 'User updated successfully!');
+            return Redirect::to('users')->with('success', 'User updated successfully!');
         }
         else 
         {
@@ -162,15 +163,15 @@ class UserController extends Controller
     {
         $client = new Client($this->data);
 
-        $response = $client->delete('user/'.$id);
+        $response = $client->delete('users/'.$id);
 
         $body = $response->getBody();
 
         $res = json_decode($body);
 
-        if (isset($res->deleted) == true)
+        if (isset($res->deleted) && $res->deleted === true)
         {
-            return Redirect::to('user')->with('success', 'User deleted successfully!');
+            return Redirect::to('users')->with('success', 'User deleted successfully!');
         }
         else 
         {
